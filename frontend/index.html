@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <link rel="icon" type="image/png" href="images/logo.png"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="SpendWise – The smartest way to track and manage your expenses."/>
+  <title>SpendWise – Smart Expense Tracker</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════════════
+     AUTH SCREEN
+═══════════════════════════════════════════════════════ -->
+<div id="auth-screen" class="auth-screen">
+
+  <!-- Animated mesh background -->
+  <div class="auth-bg">
+    <div class="mesh-gradient"></div>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+    <div class="orb orb-3"></div>
+    <div class="grid-lines"></div>
+  </div>
+
+  <!-- Left panel -->
+  <div class="auth-left">
+    <div class="auth-left-content">
+      <div class="al-logo">
+        <div class="logo-icon">
+          <img src="images/logo.png" alt="SpendWise Logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"/>
+        </div>
+        <span>SpendWise</span>
+      </div>
+      <h1 class="al-headline">Take control<br/>of your <span class="highlight-gradient">finances</span></h1>
+      <p class="al-desc">Track every rupee, analyse your habits, and hit your savings goals with intelligent expense management.</p>
+      <div class="al-features">
+        <div class="al-feat"><div class="feat-dot"></div>Real-time expense tracking</div>
+        <div class="al-feat"><div class="feat-dot"></div>Smart category analytics</div>
+        <div class="al-feat"><div class="feat-dot"></div>Daily &amp; monthly reports</div>
+        <div class="al-feat"><div class="feat-dot"></div>Secure JWT authentication</div>
+      </div>
+      <div class="al-stats">
+        <div class="al-stat"><span class="al-stat-val">100%</span><span class="al-stat-label">Secure</span></div>
+        <div class="al-divider"></div>
+        <div class="al-stat"><span class="al-stat-val">Fast</span><span class="al-stat-label">API</span></div>
+        <div class="al-divider"></div>
+        <div class="al-stat"><span class="al-stat-val">Free</span><span class="al-stat-label">Forever</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Right panel – card -->
+  <div class="auth-right">
+    <div class="auth-card">
+
+      <div class="auth-card-header">
+        <div class="tab-pill" id="auth-tabs">
+          <button class="tp-btn active" id="tab-login-btn" data-tab="login">Sign In</button>
+          <button class="tp-btn" id="tab-register-btn" data-tab="register">Sign Up</button>
+          <div class="tp-indicator"></div>
+        </div>
+      </div>
+
+      <!-- LOGIN -->
+      <form id="login-form" class="auth-form active">
+        <div class="form-greeting">
+          <h2>Welcome back 👋</h2>
+          <p>Sign in to your account</p>
+        </div>
+        <div class="field">
+          <label for="login-username">Username</label>
+          <div class="field-input">
+            <svg class="fi-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
+            <input type="text" id="login-username" placeholder="Enter your username" autocomplete="username" required/>
+          </div>
+        </div>
+        <div class="field">
+          <label for="login-password">Password</label>
+          <div class="field-input">
+            <svg class="fi-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+            <input type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password" required/>
+            <button type="button" class="eye-btn" id="login-eye">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="login-error" class="alert-error hidden"></div>
+        <button type="submit" class="submit-btn" id="login-btn">
+          <span>Sign In</span>
+          <div class="spin hidden"></div>
+          <svg class="btn-arrow" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+        </button>
+      </form>
+
+      <!-- REGISTER -->
+      <form id="register-form" class="auth-form">
+        <div class="form-greeting">
+          <h2>Create account 🚀</h2>
+          <p>Start your financial journey</p>
+        </div>
+        <div class="field">
+          <label for="reg-username">Username</label>
+          <div class="field-input">
+            <svg class="fi-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
+            <input type="text" id="reg-username" placeholder="Choose a username" required/>
+          </div>
+        </div>
+        <div class="field">
+          <label for="reg-password">Password</label>
+          <div class="field-input">
+            <svg class="fi-icon" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clip-rule="evenodd"/></svg>
+            <input type="password" id="reg-password" placeholder="Create a strong password" required/>
+            <button type="button" class="eye-btn" id="reg-eye">
+              <svg viewBox="0 0 20 20" fill="currentColor"><path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/><path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/></svg>
+            </button>
+          </div>
+        </div>
+        <div id="reg-error" class="alert-error hidden"></div>
+        <div id="reg-success" class="alert-success hidden"></div>
+        <button type="submit" class="submit-btn" id="register-btn">
+          <span>Create Account</span>
+          <div class="spin hidden"></div>
+          <svg class="btn-arrow" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd"/></svg>
+        </button>
+      </form>
+
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════════
+     DASHBOARD
+═══════════════════════════════════════════════════════ -->
+<div id="dashboard-screen" class="dash hidden">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sb-top">
+      <div class="sb-logo">
+        <div class="logo-icon sm">
+          <img src="images/logo.png" alt="SpendWise Logo" style="width:100%;height:100%;object-fit:cover;border-radius:inherit;"/>
+        </div>
+        <span class="sb-brand">SpendWise</span>
+      </div>
+      <button class="sb-close" id="sidebar-close">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+
+    <div class="sb-section-label">MAIN MENU</div>
+
+    <nav class="sb-nav">
+      <a class="sb-link active" data-page="overview" id="nav-overview" href="#">
+        <div class="sb-link-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+        </div>
+        <span>Overview</span>
+        <div class="sb-badge" id="badge-overview"></div>
+      </a>
+      <a class="sb-link" data-page="expenses" id="nav-expenses" href="#">
+        <div class="sb-link-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+        </div>
+        <span>All Expenses</span>
+      </a>
+      <a class="sb-link" data-page="analytics" id="nav-analytics" href="#">
+        <div class="sb-link-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        </div>
+        <span>Analytics</span>
+      </a>
+    </nav>
+
+    <div class="sb-section-label">ACTIONS</div>
+    <nav class="sb-nav">
+      <a class="sb-link accent-link" data-page="add-expense" id="nav-add" href="#">
+        <div class="sb-link-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="16"/><line x1="8" y1="12" x2="16" y2="12"/></svg>
+        </div>
+        <span>Add Expense</span>
+      </a>
+    </nav>
+
+    <div class="sb-spacer"></div>
+
+    <div class="sb-user">
+      <div class="sb-avatar" id="sb-avatar">U</div>
+      <div class="sb-user-info">
+        <div class="sb-username" id="sb-username">User</div>
+        <div class="sb-role">Member</div>
+      </div>
+      <button class="sb-logout" id="logout-btn" title="Logout">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+      </button>
+    </div>
+  </aside>
+
+  <!-- overlay для mobile -->
+  <div class="sb-overlay" id="sb-overlay"></div>
+
+  <!-- MAIN -->
+  <main class="main" id="main-content">
+    <!-- TOPBAR -->
+    <header class="topbar">
+      <button class="hamburger" id="hamburger-btn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="7" x2="21" y2="7"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="17" x2="21" y2="17"/></svg>
+      </button>
+      <div class="tb-breadcrumb">
+        <span class="tb-brand-mini">SpendWise</span>
+        <svg viewBox="0 0 16 16" fill="currentColor" class="tb-chevron"><path d="M6 12l4-4-4-4"/></svg>
+        <span class="tb-page-name" id="topbar-title">Overview</span>
+      </div>
+      <div class="tb-actions">
+        <button class="tb-icon-btn" id="quick-add-topbar" title="Add expense">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+        <div class="tb-avatar" id="tb-avatar">U</div>
+      </div>
+    </header>
+
+    <!-- ─── OVERVIEW ─── -->
+    <section class="page active" id="page-overview">
+      <div class="page-hero">
+        <div class="hero-text">
+          <h1 id="hero-greeting">Good morning, User 👋</h1>
+          <p>Here's your financial snapshot for today</p>
+        </div>
+        <button class="pill-btn" id="quick-add-btn">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Expense
+        </button>
+      </div>
+
+      <!-- KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card kpi-main">
+          <div class="kpi-label">Total Spent</div>
+          <div class="kpi-value" id="kpi-total">$0.00</div>
+          <div class="kpi-sub">All time</div>
+          <div class="kpi-bg-icon">💰</div>
+        </div>
+        <div class="kpi-card kpi-today">
+          <div class="kpi-label">Today</div>
+          <div class="kpi-value" id="kpi-today">$0.00</div>
+          <div class="kpi-sub" id="kpi-today-date">—</div>
+          <div class="kpi-bg-icon">📅</div>
+        </div>
+        <div class="kpi-card kpi-month">
+          <div class="kpi-label">This Month</div>
+          <div class="kpi-value" id="kpi-month">$0.00</div>
+          <div class="kpi-sub" id="kpi-month-range">—</div>
+          <div class="kpi-bg-icon">📊</div>
+        </div>
+        <div class="kpi-card kpi-cats">
+          <div class="kpi-label">Categories</div>
+          <div class="kpi-value" id="kpi-cats">0</div>
+          <div class="kpi-sub">Used</div>
+          <div class="kpi-bg-icon">🏷️</div>
+        </div>
+      </div>
+
+      <!-- Charts Row -->
+      <div class="charts-row">
+        <div class="glass-card chart-card-wide">
+          <div class="card-header">
+            <div class="card-title">Spending by Category</div>
+            <span class="tag">Bar Chart</span>
+          </div>
+          <div class="chart-box"><canvas id="bar-chart"></canvas></div>
+        </div>
+        <div class="glass-card chart-card-slim">
+          <div class="card-header">
+            <div class="card-title">Distribution</div>
+            <span class="tag">Donut</span>
+          </div>
+          <div class="chart-box donut-box"><canvas id="donut-chart"></canvas></div>
+        </div>
+      </div>
+
+      <!-- Recent -->
+      <div class="glass-card">
+        <div class="card-header">
+          <div class="card-title">Recent Transactions</div>
+          <a class="text-link" href="#" id="view-all-link">View all →</a>
+        </div>
+        <div class="txn-list" id="recent-list">
+          <div class="skeleton-list">
+            <div class="skeleton-row"></div>
+            <div class="skeleton-row"></div>
+            <div class="skeleton-row"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── ALL EXPENSES ─── -->
+    <section class="page" id="page-expenses">
+      <div class="page-hero">
+        <div class="hero-text">
+          <h1>All Expenses</h1>
+          <p>Browse, search and manage all your transactions</p>
+        </div>
+      </div>
+
+      <div class="glass-card">
+        <div class="toolbar">
+          <div class="search-box">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            <input type="text" id="search-input" placeholder="Search expenses…"/>
+          </div>
+          <div class="toolbar-right">
+            <select id="sort-select" class="sel">
+              <option value="DESC">Newest first</option>
+              <option value="ASC">Oldest first</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="exp-table">
+            <thead>
+              <tr>
+                <th>#</th><th>Title</th><th>Category</th><th>Amount</th><th>Date</th><th>Method</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="expenses-tbody">
+              <tr><td colspan="7" class="empty-cell">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="pagination" id="pagination">
+          <button class="pag-btn" id="prev-page-btn" disabled>← Prev</button>
+          <span class="pag-info" id="page-info">Page 1</span>
+          <button class="pag-btn" id="next-page-btn">Next →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─── ANALYTICS ─── -->
+    <section class="page" id="page-analytics">
+      <div class="page-hero">
+        <div class="hero-text">
+          <h1>Analytics</h1>
+          <p>Deep-dive into your spending patterns</p>
+        </div>
+      </div>
+
+      <div class="analytics-grid">
+
+        <div class="glass-card">
+          <div class="card-header"><div class="card-title">📅 Daily Lookup</div></div>
+          <div class="field">
+            <label for="daily-date-pick">Pick a date</label>
+            <div class="field-input"><input type="date" id="daily-date-pick" class="date-native"/></div>
+          </div>
+          <button class="submit-btn small mt12" id="daily-fetch-btn"><span>Lookup</span></button>
+          <div class="insight-box hidden" id="daily-result">
+            <div class="insight-emoji">📆</div>
+            <div class="insight-amount" id="daily-amount">$0.00</div>
+            <div class="insight-label">spent on this day</div>
+          </div>
+        </div>
+
+        <div class="glass-card">
+          <div class="card-header"><div class="card-title">🗓️ Monthly Report</div></div>
+          <div class="two-fields">
+            <div class="field">
+              <label for="range-start">From</label>
+              <div class="field-input"><input type="date" id="range-start" class="date-native"/></div>
+            </div>
+            <div class="field">
+              <label for="range-end">To</label>
+              <div class="field-input"><input type="date" id="range-end" class="date-native"/></div>
+            </div>
+          </div>
+          <button class="submit-btn small mt12" id="range-fetch-btn"><span>Get Report</span></button>
+          <div class="insight-box hidden" id="range-result">
+            <div class="insight-emoji">🗂️</div>
+            <div class="insight-amount" id="range-amount">$0.00</div>
+            <div class="insight-label" id="range-label-text">in selected period</div>
+          </div>
+        </div>
+
+        <div class="glass-card span-full">
+          <div class="card-header"><div class="card-title">🏷️ Category Breakdown</div></div>
+          <div class="cat-bars" id="cat-analytics-list">
+            <div class="skeleton-list"><div class="skeleton-row"></div><div class="skeleton-row"></div><div class="skeleton-row"></div></div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ─── ADD EXPENSE ─── -->
+    <section class="page" id="page-add-expense">
+      <div class="page-hero">
+        <div class="hero-text">
+          <h1>Add Expense</h1>
+          <p>Record a new transaction quickly</p>
+        </div>
+      </div>
+
+      <div class="glass-card add-card">
+        <form id="add-expense-form">
+          <div class="add-grid">
+
+            <div class="field">
+              <label for="exp-title">Expense Title</label>
+              <div class="field-input">
+                <svg class="fi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+                <input type="text" id="exp-title" placeholder="e.g. Lunch at Café Coffee Day" required/>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="exp-amount">Amount (₹)</label>
+              <div class="field-input">
+                <svg class="fi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+                <input type="number" id="exp-amount" placeholder="0.00" step="0.01" min="0" required/>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="exp-category">Category</label>
+              <div class="field-input">
+                <svg class="fi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.59 13.41l-7.17 7.17a2 2 0 01-2.83 0L2 12V2h10l8.59 8.59a2 2 0 010 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                <select id="exp-category" required>
+                  <option value="">Select category…</option>
+                  <option value="Food">🍔 Food & Dining</option>
+                  <option value="Transport">🚗 Transport</option>
+                  <option value="Shopping">🛍️ Shopping</option>
+                  <option value="Entertainment">🎬 Entertainment</option>
+                  <option value="Health">💊 Health</option>
+                  <option value="Bills">🧾 Bills & Utilities</option>
+                  <option value="Education">📚 Education</option>
+                  <option value="Travel">✈️ Travel</option>
+                  <option value="Other">📦 Other</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="field">
+              <label for="exp-date">Date</label>
+              <div class="field-input">
+                <svg class="fi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+                <input type="date" id="exp-date" required/>
+              </div>
+            </div>
+
+            <div class="field span-full">
+              <label>Payment Method</label>
+              <div class="payment-grid" id="payment-options">
+                <label class="pay-chip active"><input type="radio" name="payment" value="Cash" checked/><span>💵 Cash</span></label>
+                <label class="pay-chip"><input type="radio" name="payment" value="Credit Card"/><span>💳 Credit</span></label>
+                <label class="pay-chip"><input type="radio" name="payment" value="Debit Card"/><span>🏧 Debit</span></label>
+                <label class="pay-chip"><input type="radio" name="payment" value="UPI"/><span>📱 UPI</span></label>
+                <label class="pay-chip"><input type="radio" name="payment" value="Net Banking"/><span>🏦 Net Banking</span></label>
+              </div>
+            </div>
+
+          </div><!-- /add-grid -->
+
+          <div id="add-expense-error" class="alert-error hidden"></div>
+          <div id="add-expense-success" class="alert-success hidden"></div>
+
+          <button type="submit" class="submit-btn mt16" id="add-expense-btn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            <span>Add Expense</span>
+            <div class="spin hidden"></div>
+          </button>
+        </form>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- ═══ EDIT MODAL ═══ -->
+<div id="edit-modal" class="modal-bg hidden">
+  <div class="modal">
+    <div class="modal-head">
+      <h3>Edit Expense</h3>
+      <button class="modal-x" id="modal-close-btn"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <form id="edit-form">
+      <input type="hidden" id="edit-id"/>
+      <div class="modal-grid">
+        <div class="field"><label for="edit-title">Title</label><div class="field-input"><input type="text" id="edit-title" required/></div></div>
+        <div class="field"><label for="edit-amount">Amount</label><div class="field-input"><input type="number" id="edit-amount" step="0.01" min="0" required/></div></div>
+        <div class="field"><label for="edit-category">Category</label><div class="field-input">
+          <select id="edit-category" required>
+            <option value="Food">🍔 Food</option><option value="Transport">🚗 Transport</option><option value="Shopping">🛍️ Shopping</option>
+            <option value="Entertainment">🎬 Entertainment</option><option value="Health">💊 Health</option><option value="Bills">🧾 Bills</option>
+            <option value="Education">📚 Education</option><option value="Travel">✈️ Travel</option><option value="Other">📦 Other</option>
+          </select>
+        </div></div>
+        <div class="field"><label for="edit-date">Date</label><div class="field-input"><input type="date" id="edit-date" required/></div></div>
+        <div class="field span-full"><label for="edit-payment">Payment Method</label><div class="field-input">
+          <select id="edit-payment" required>
+            <option value="Cash">💵 Cash</option><option value="Credit Card">💳 Credit Card</option>
+            <option value="Debit Card">🏧 Debit Card</option><option value="UPI">📱 UPI</option><option value="Net Banking">🏦 Net Banking</option>
+          </select>
+        </div></div>
+      </div>
+      <div id="edit-error" class="alert-error hidden"></div>
+      <div class="modal-foot">
+        <button type="button" class="ghost-btn" id="modal-cancel-btn">Cancel</button>
+        <button type="submit" class="submit-btn small" id="edit-save-btn"><span>Save Changes</span><div class="spin hidden"></div></button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ═══ DELETE MODAL ═══ -->
+<div id="delete-modal" class="modal-bg hidden">
+  <div class="modal modal-sm">
+    <div class="modal-head">
+      <h3>Delete Expense</h3>
+      <button class="modal-x" id="delete-modal-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <p class="modal-body-text">Are you sure you want to delete this expense? This action <strong>cannot be undone</strong>.</p>
+    <div class="modal-foot">
+      <button class="ghost-btn" id="delete-cancel-btn">Cancel</button>
+      <button class="danger-btn" id="delete-confirm-btn"><span>Delete</span><div class="spin hidden"></div></button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div id="toast" class="toast hidden">
+  <div class="toast-icon" id="toast-icon">✓</div>
+  <span id="toast-message">Done</span>
+</div>
+
+<script src="js/api.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
