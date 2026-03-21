@@ -8,8 +8,10 @@ import models
 
 
 app=FastAPI()
-models.create_table()
-
+@app.on_event("startup")
+def startup():
+    models.create_table()
+    
 @app.post("/register")
 def register(x:schemas.Users,conn=Depends(database.get_db)):
     return crud.register(x,conn)
