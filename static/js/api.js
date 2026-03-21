@@ -2,7 +2,7 @@
    api.js  –  All HTTP calls to the FastAPI backend
    ============================================================ */
 
-const BASE_URL = 'http://127.0.0.1:8000';
+const BASE_URL = '';
 
 // ─── Auth helpers ───
 function setToken(t)  { localStorage.setItem('sw_token', t); }
