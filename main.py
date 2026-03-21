@@ -5,13 +5,28 @@ import schemas
 from typing import List,Optional
 import auth
 import models
+from fastapi.middleware.cors import CORSMiddleware
 
 
 app=FastAPI()
-@app.on_event("startup")
-def startup():
-    models.create_table()
-    
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+def create_tables():
+    try:
+        models.create_table()
+        print("Table created")
+    except Exception as e:
+        print("Error:", e)
+
+create_tables()
+
 @app.post("/register")
 def register(x:schemas.Users,conn=Depends(database.get_db)):
     return crud.register(x,conn)
