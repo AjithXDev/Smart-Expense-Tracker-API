@@ -1,0 +1,20 @@
+# Windows
+* text=auto eol=crlf
+
+# Force LF for these file types (optional - keeps consistency)
+*.css text eol=lf
+*.html text eol=lf
+*.js text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.txt text eol=lf
+
+# Binary files - no conversion
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.db binary
