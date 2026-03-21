@@ -1,0 +1,18 @@
+# Python
+__pycache__/
+*.pyc
+
+# Environment
+.env
+
+# SQLite DB
+*.db
+
+# VS Code
+.vscode/
+
+# pytest
+.pytest_cache/
+
+# OS files
+.DS_Store
