@@ -20,7 +20,7 @@ A backend API built using FastAPI to manage personal expenses with authenticatio
 ## 🛠️ Tech Stack
 
 * FastAPI
-* SQLite
+* PostgreSQL (Supabase)
 * JWT (python-jose)
 * Passlib (bcrypt)
 * Uvicorn
@@ -57,6 +57,7 @@ pip install -r requirements.txt
 ### 4. Create `.env` file
 
 SECRET_KEY=your_secret_key
+DATABASE_URL=postgresql://postgres:password@localhost/dbname
 
 ### 5. Run the app
 
@@ -84,7 +85,6 @@ This API can be deployed using platforms like Render.
 
 ## ⭐ Future Improvements
 
-* PostgreSQL integration
 * Budget tracking
 * Export to CSV
 * Frontend integration

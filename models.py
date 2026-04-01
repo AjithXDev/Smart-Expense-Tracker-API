@@ -6,7 +6,7 @@ def create_table():
 
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS users(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             username TEXT NOT NULL,
             password TEXT NOT NULL,
             mail TEXT NOT NULL,
@@ -16,10 +16,10 @@ def create_table():
 
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS expenses(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             title TEXT NOT NULL,
             category TEXT NOT NULL,
-            amount REAL NOT NULL,
+            amount NUMERIC NOT NULL,
             date TEXT NOT NULL,
             payment_method TEXT NOT NULL,
             user_id INTEGER NOT NULL,
@@ -29,10 +29,10 @@ def create_table():
 
         cursor.execute("""
         CREATE TABLE IF NOT EXISTS recurring_expenses(
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            id SERIAL PRIMARY KEY,
             title TEXT NOT NULL,
             category TEXT NOT NULL,
-            amount REAL NOT NULL,
+            amount NUMERIC NOT NULL,
             next_date TEXT NOT NULL,
             frequency TEXT NOT NULL,
             payment_method TEXT NOT NULL,

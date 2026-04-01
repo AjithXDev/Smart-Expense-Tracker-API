@@ -1,11 +1,14 @@
-import sqlite3
+import psycopg2
+import os
 from contextlib import contextmanager
+from dotenv import load_dotenv
 
-DB_PATH = "expense.db"
+load_dotenv()
+
+DB_URL = os.getenv("DATABASE_URL")
 
 def get_db():
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-    conn.execute("PRAGMA foreign_keys = ON")
+    conn = psycopg2.connect(DB_URL)
     try:
         yield conn
     finally:
@@ -13,8 +16,7 @@ def get_db():
 
 @contextmanager
 def get_db_context():
-    conn = sqlite3.connect(DB_PATH, check_same_thread=False)
-    conn.execute("PRAGMA foreign_keys = ON")
+    conn = psycopg2.connect(DB_URL)
     try:
         yield conn
     finally:
