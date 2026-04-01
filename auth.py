@@ -7,7 +7,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-secret_key = os.getenv("SECRET_KEY")
+secret_key = os.getenv("SECRET_KEY", "a_very_secret_fallback_key_for_development")
 algorithm="HS256"
 security=HTTPBearer()
 
