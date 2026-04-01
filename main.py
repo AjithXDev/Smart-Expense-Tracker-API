@@ -1,19 +1,31 @@
 import crud
 import database
-from fastapi import FastAPI,Depends
 import schemas
-from typing import List,Optional
 import auth
 import models
+from typing import Optional
+from contextlib import asynccontextmanager
+
+from fastapi import FastAPI, Depends, Request
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import HTMLResponse
 
+# Lifespan - Startup Logic
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    try:
+        models.create_table()
+        print("✅ Database tables confirmed/created")
+    except Exception as e:
+        print(f"❌ Error initializing database: {e}")
+    yield
 
-app=FastAPI()
+# Initialize App once with lifespan
+app = FastAPI(lifespan=lifespan)
 
+# Middleware
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -22,33 +34,23 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mounting Statics & Templates
 app.mount("/static", StaticFiles(directory="static"), name="static")
-
-# templates (html)
 templates = Jinja2Templates(directory="templates")
+
+# --- Routes ---
 
 @app.get("/", response_class=HTMLResponse)
 def home(request: Request):
     return templates.TemplateResponse("index.html", {"request": request})
 
-
-def create_tables():
-    try:
-        models.create_table()
-        print("Table created")
-    except Exception as e:
-        print("Error:", e)
-
-create_tables()
-
 @app.post("/register")
-def register(x:schemas.Users,conn=Depends(database.get_db)):
-    return crud.register(x,conn)
-
+def register(x: schemas.UserRegister, conn=Depends(database.get_db)):
+    return crud.register(x, conn)
 
 @app.post("/login")
-def login(x:schemas.Users,conn=Depends(database.get_db)):
-    return crud.login(x,conn)
+def login(x: schemas.UserLogin, conn=Depends(database.get_db)):
+    return crud.login(x, conn)
 
 @app.post("/add-expense")
 def add_expenses(x:schemas.Expenses,payload:dict=Depends(auth.verify_token),conn=Depends(database.get_db)):
@@ -81,3 +83,19 @@ def get_daily_expense(date: str, payload:dict=Depends(auth.verify_token), conn=D
 @app.get("/monthly_expense/{startdate}/{enddate}")
 def get_monthly_expense(startdate: str, enddate: str, payload:dict=Depends(auth.verify_token), conn=Depends(database.get_db)):
     return crud.monthly_expense(startdate,enddate,payload,conn)
+
+@app.get("/profile", response_model=schemas.UserProfileResponse)
+def get_profile(payload:dict=Depends(auth.verify_token), conn=Depends(database.get_db)):
+    return crud.get_user_profile(payload, conn)
+
+@app.post("/add-recurring-expense")
+def add_recurring_expense(x:schemas.RecurringExpenseAdd, payload:dict=Depends(auth.verify_token), conn=Depends(database.get_db)):
+    return crud.add_recurring_expense(x, payload, conn)
+
+@app.get("/recurring-expenses", response_model=schemas.RecurringExpenseListResponse)
+def get_recurring_expenses(payload:dict=Depends(auth.verify_token), conn=Depends(database.get_db)):
+    return crud.get_recurring_expenses(payload, conn)
+
+@app.delete("/delete-recurring/{id}")
+def delete_recurring_expense(id:int, payload:dict=Depends(auth.verify_token), conn=Depends(database.get_db)):
+    return crud.delete_recurring_expense(id, payload, conn)

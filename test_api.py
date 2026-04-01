@@ -8,7 +8,9 @@ def test_full_flow():
     
     res = client.post("/register", json={
         "username": "testusers",
-        "password": "test123"
+        "password": "test123",
+        "mail": "test@mail.com",
+        "name": "Test User"
     })
     assert res.status_code == 200
 
@@ -81,7 +83,7 @@ def test_invalid_login():
         "username": "wrong",
         "password": "wrong"
     })
-    assert res.status_code == 400
+    assert res.status_code == 401
 
 
 def test_no_token_access():

@@ -76,10 +76,11 @@ function hide   (id)      { const e=$(id); if(e) e.classList.add('hidden'); }
 const PAGES = {
   'overview':    'Overview',
   'expenses':    'All Expenses',
+  'recurring':   'Recurring Expenses',
   'analytics':   'Analytics',
   'add-expense': 'Add Expense',
 };
-const navIds = { 'overview':'nav-overview','expenses':'nav-expenses','analytics':'nav-analytics','add-expense':'nav-add' };
+const navIds = { 'overview':'nav-overview','expenses':'nav-expenses','recurring':'nav-recurring','analytics':'nav-analytics','add-expense':'nav-add' };
 
 function goTo(key) {
   document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
@@ -90,6 +91,7 @@ function goTo(key) {
   closeSidebar();
   if (key === 'overview')    loadOverview();
   if (key === 'expenses')    loadTable();
+  if (key === 'recurring')   loadRecurringTable();
   if (key === 'analytics')   loadAnalytics();
 }
 document.querySelectorAll('.sb-link').forEach(a => {
@@ -116,7 +118,7 @@ function showDash(username) {
   $('sb-avatar').textContent  = username[0].toUpperCase();
   $('sb-username').textContent= username;
   $('tb-avatar').textContent  = username[0].toUpperCase();
-  $('hero-greeting').textContent = `${greet()}, ${username} 👋`;
+  $('hero-greeting').textContent = `${greet()}, ${username}`;
   $('exp-date').value  = today();
   $('daily-date-pick').value = today();
   const {s,e} = monthRange();
@@ -166,26 +168,66 @@ $('login-form').addEventListener('submit', async e => {
   finally      { setLoad('login-btn', false); }
 });
 
-// Register
-$('register-form').addEventListener('submit', async e => {
-  e.preventDefault(); hide('reg-error'); hide('reg-success');
-  setLoad('register-btn', true);
-  try {
-    const r = await API.register($('reg-username').value.trim(), $('reg-password').value);
-    showOk('reg-success', r.message || 'Account created! Please sign in.');
-    $('register-form').reset();
-  } catch(err) { showErr('reg-error', err.message); }
-  finally      { setLoad('register-btn', false); }
-});
+  $('register-form').addEventListener('submit', async e => {
+    e.preventDefault(); hide('reg-error'); hide('reg-success');
+    setLoad('register-btn', true);
+    try {
+      const r = await API.register($('reg-username').value.trim(), $('reg-password').value, $('reg-mail').value.trim(),$('reg-name').value.trim());
+      showOk('reg-success', r.message || 'Account created! Please sign in.');
+      $('register-form').reset();
+      setTimeout(() => {
+        $('tab-login-btn').click();
+        hide('reg-success');
+      }, 1000);
+    } catch(err) { showErr('reg-error', err.message); }
+    finally      { setLoad('register-btn', false); }
+  });
 
 // Logout
-$('logout-btn').addEventListener('click', () => {
+$('logout-btn').addEventListener('click', (e) => {
+  e.stopPropagation();
   clearToken();
   $('dashboard-screen').classList.add('hidden');
   $('auth-screen').classList.remove('hidden');
   barChart   && barChart.destroy();   barChart   = null;
-  donutChart && donutChart.destroy(); donutChart = null;
 });
+
+// ══════════════════════════════════════════
+// PROFILE MODAL
+// ══════════════════════════════════════════
+const profModal = $('profile-modal');
+const closeProf = () => profModal.classList.add('hidden');
+$('profile-modal-close').addEventListener('click', closeProf);
+$('profile-close-btn').addEventListener('click', closeProf);
+profModal.addEventListener('click', e => { if(e.target === profModal) closeProf(); });
+
+const sbUserBtn = $('sb-user-btn');
+const tbAvatarBtn = $('tb-avatar');
+
+async function openProfileModal() {
+  profModal.classList.remove('hidden');
+  $('prof-name').textContent = 'Loading...';
+  $('prof-mail').textContent = 'Loading...';
+  $('prof-username').textContent = '@' + getUser();
+  try {
+    const data = await API.getProfile();
+    $('prof-name').textContent = data.name;
+    $('prof-mail').textContent = data.mail;
+    $('prof-username').textContent = '@' + data.username;
+    $('prof-avatar').textContent = data.name.charAt(0).toUpperCase();
+  } catch(err) {
+    toast('Failed to load profile', true);
+  }
+}
+
+if (sbUserBtn) {
+  sbUserBtn.addEventListener('click', openProfileModal);
+}
+if (tbAvatarBtn) {
+  tbAvatarBtn.style.cursor = 'pointer';
+  tbAvatarBtn.title = 'View Profile';
+  tbAvatarBtn.addEventListener('click', openProfileModal);
+}
 
 // ══════════════════════════════════════════
 // QUICK ADD buttons
@@ -433,7 +475,7 @@ $('edit-form').addEventListener('submit', async e => {
       payment_method: $('edit-payment').value,
     });
     closeEdit();
-    toast('Expense updated ✅');
+    toast('Expense updated');
     loadTable(); loadOverview();
   } catch(err) { showErr('edit-error', err.message); }
   finally      { setLoad('edit-save-btn', false); }
@@ -442,7 +484,10 @@ $('edit-form').addEventListener('submit', async e => {
 // ══════════════════════════════════════════
 // DELETE MODAL
 // ══════════════════════════════════════════
-function openDel(id) { delId=id; $('delete-modal').classList.remove('hidden'); }
+let delType = 'normal';
+function openDel(id) { delId=id; delType='normal'; $('delete-modal').classList.remove('hidden'); }
+function openDelRecurring(id) { delId=id; delType='recurring'; $('delete-modal').classList.remove('hidden'); }
+
 const closeDel = () => { $('delete-modal').classList.add('hidden'); delId=null; };
 $('delete-modal-close').addEventListener('click', closeDel);
 $('delete-cancel-btn').addEventListener('click', closeDel);
@@ -452,10 +497,17 @@ $('delete-confirm-btn').addEventListener('click', async () => {
   if (!delId) return;
   setLoad('delete-confirm-btn', true);
   try {
-    await API.deleteExpense(delId);
-    closeDel();
-    toast('Expense deleted 🗑️');
-    loadTable(); loadOverview();
+    if (delType === 'recurring') {
+      await API.deleteRecurringExpense(delId);
+      closeDel();
+      toast('Recurring Setup stopped!');
+      if ($('page-recurring').classList.contains('active')) loadRecurringTable();
+    } else {
+      await API.deleteExpense(delId);
+      closeDel();
+      toast('Expense deleted');
+      loadTable(); loadOverview();
+    }
   } catch(err) { toast(err.message, true); closeDel(); }
   finally      { setLoad('delete-confirm-btn', false); }
 });
@@ -470,27 +522,93 @@ document.querySelectorAll('.pay-chip').forEach(chip => {
   });
 });
 
+$('exp-is-recurring')?.addEventListener('change', e => {
+  if (e.target.checked) $('recurring-options').classList.remove('hidden');
+  else $('recurring-options').classList.add('hidden');
+});
+
 $('add-expense-form').addEventListener('submit', async e => {
   e.preventDefault();
   hide('add-expense-error'); hide('add-expense-success');
   setLoad('add-expense-btn', true);
   const pm = document.querySelector('#payment-options input:checked')?.value || 'Cash';
+  const isRecur = $('exp-is-recurring').checked;
+  
   try {
-    const r = await API.addExpense({
+    const payload = {
       title:          $('exp-title').value.trim(),
       category:       $('exp-category').value,
       amount:         parseFloat($('exp-amount').value),
-      date:           $('exp-date').value,
       payment_method: pm,
-    });
-    showOk('add-expense-success', r.message || 'Expense added!');
+    };
+    
+    let r;
+    if (isRecur) {
+        payload.next_date = $('exp-date').value;
+        payload.frequency = $('exp-frequency').value;
+        r = await API.addRecurringExpense(payload);
+    } else {
+        payload.date = $('exp-date').value;
+        r = await API.addExpense(payload);
+    }
+    
+    showOk('add-expense-success', r.message || 'Added successfully!');
+    setTimeout(() => hide('add-expense-success'), 2000);
     $('add-expense-form').reset();
     $('exp-date').value = today();
+    $('exp-is-recurring').checked = false;
+    $('recurring-options').classList.add('hidden');
     document.querySelectorAll('.pay-chip').forEach((c,i) => c.classList.toggle('active', i===0));
-    toast('Expense added successfully 🎉');
+    toast('Added successfully');
   } catch(err) { showErr('add-expense-error', err.message); }
   finally      { setLoad('add-expense-btn', false); }
 });
+
+// ══════════════════════════════════════════
+// RECURRING UI RENDERING
+// ══════════════════════════════════════════
+async function loadRecurringTable() {
+  const tbody = $('recurring-tbody');
+  tbody.innerHTML = `<tr><td colspan="7" class="empty-cell">Loading…</td></tr>`;
+  try {
+    const d = await API.getRecurringExpenses();
+    renderRecurringTable(d.data || []);
+  } catch(err) {
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-cell" style="color:#ef4444">${err.message}</td></tr>`;
+  }
+}
+
+function renderRecurringTable(items) {
+  const tbody = $('recurring-tbody');
+  if (!items.length) {
+    tbody.innerHTML = `<tr><td colspan="7" class="empty-cell">No recurring expenses set up.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = items.map(item => {
+    const col = cc(item.category);
+    return `
+    <tr>
+      <td style="font-weight:700;color:#fff">${esc(item.title)}</td>
+      <td><span class="cat-badge" style="background:${col}18;color:${col}">${ce(item.category)} ${item.category}</span></td>
+      <td class="amount-bold" style="color:${col}">${fmt(item.amount)}</td>
+      <td>${item.payment_method}</td>
+      <td><span class="tag" style="background:rgba(255,255,255,0.1);color:#fff">${item.frequency}</span></td>
+      <td style="color:#10b981;font-weight:600">${item.next_date}</td>
+      <td>
+        <div class="row-actions">
+          <button class="icon-btn del" data-id="${item.id}" title="Delete/Stop Recurring">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 01-2 2H8a2 2 0 01-2-2L5 6"/><path d="M10 11v6M14 11v6M9 6V4h6v2"/></svg>
+          </button>
+        </div>
+      </td>
+    </tr>`;
+  }).join('');
+  
+  tbody.querySelectorAll('.del').forEach(btn => {
+    btn.addEventListener('click', () => openDelRecurring(parseInt(btn.dataset.id)));
+  });
+}
+
 
 // ══════════════════════════════════════════
 // ANALYTICS

@@ -70,7 +70,7 @@
       <!-- LOGIN -->
       <form id="login-form" class="auth-form active">
         <div class="form-greeting">
-          <h2>Welcome back 👋</h2>
+          <h2>Welcome back</h2>
           <p>Sign in to your account</p>
         </div>
         <div class="field">
@@ -101,9 +101,25 @@
       <!-- REGISTER -->
       <form id="register-form" class="auth-form">
         <div class="form-greeting">
-          <h2>Create account 🚀</h2>
+          <h2>Create account</h2>
           <p>Start your financial journey</p>
         </div>
+        <div class="field">
+          <label for="reg-name">Name</label>
+          <div class="field-input">
+            <svg class="fi-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
+            <input type="text" id="reg-name" placeholder="Enter Name" required/>
+          </div>
+        </div>
+
+        <div class="field">
+          <label for="reg-mail">Mail ID</label>
+          <div class="field-input">
+            <svg class="fi-icon" viewBox="0 0 20 20" fill="currentColor"><path d="M10 10a4 4 0 100-8 4 4 0 000 8zm-7 8a7 7 0 1114 0H3z"/></svg>
+            <input type="email" id="reg-mail" placeholder="enter mail id" required/>
+          </div>
+        </div>
+
         <div class="field">
           <label for="reg-username">Username</label>
           <div class="field-input">
@@ -111,6 +127,7 @@
             <input type="text" id="reg-username" placeholder="Choose a username" required/>
           </div>
         </div>
+
         <div class="field">
           <label for="reg-password">Password</label>
           <div class="field-input">
@@ -121,6 +138,7 @@
             </button>
           </div>
         </div>
+
         <div id="reg-error" class="alert-error hidden"></div>
         <div id="reg-success" class="alert-success hidden"></div>
         <button type="submit" class="submit-btn" id="register-btn">
@@ -175,6 +193,12 @@
         </div>
         <span>Analytics</span>
       </a>
+      <a class="sb-link" data-page="recurring" id="nav-recurring" href="#">
+        <div class="sb-link-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+        </div>
+        <span>Recurring Expenses</span>
+      </a>
     </nav>
 
     <div class="sb-section-label">ACTIONS</div>
@@ -189,7 +213,7 @@
 
     <div class="sb-spacer"></div>
 
-    <div class="sb-user">
+    <div class="sb-user" id="sb-user-btn" style="cursor: pointer;" title="View Profile">
       <div class="sb-avatar" id="sb-avatar">U</div>
       <div class="sb-user-info">
         <div class="sb-username" id="sb-username">User</div>
@@ -228,7 +252,7 @@
     <section class="page active" id="page-overview">
       <div class="page-hero">
         <div class="hero-text">
-          <h1 id="hero-greeting">Good morning, User 👋</h1>
+          <h1 id="hero-greeting">Good morning, User</h1>
           <p>Here's your financial snapshot for today</p>
         </div>
         <button class="pill-btn" id="quick-add-btn">
@@ -397,6 +421,35 @@
       </div>
     </section>
 
+    <!-- ─── RECURRING EXPENSES ─── -->
+    <section class="page" id="page-recurring">
+      <div class="page-hero">
+        <div class="hero-text">
+          <h1>Recurring Expenses</h1>
+          <p>Manage your automatically scheduled payments</p>
+        </div>
+        <button class="pill-btn" onclick="goTo('add-expense')">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+          New Recurring Setup
+        </button>
+      </div>
+
+      <div class="glass-card">
+        <div class="table-wrap">
+          <table class="exp-table">
+            <thead>
+              <tr>
+                <th>Title</th><th>Category</th><th>Amount</th><th>Method</th><th>Frequency</th><th>Next Date</th><th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="recurring-tbody">
+              <tr><td colspan="7" class="empty-cell">Loading…</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
     <!-- ─── ADD EXPENSE ─── -->
     <section class="page" id="page-add-expense">
       <div class="page-hero">
@@ -461,6 +514,25 @@
                 <label class="pay-chip"><input type="radio" name="payment" value="Debit Card"/><span>🏧 Debit</span></label>
                 <label class="pay-chip"><input type="radio" name="payment" value="UPI"/><span>📱 UPI</span></label>
                 <label class="pay-chip"><input type="radio" name="payment" value="Net Banking"/><span>🏦 Net Banking</span></label>
+              </div>
+            </div>
+
+            <div class="field span-full" style="padding-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1);">
+              <label class="recurring-checkbox-wrap" style="display:flex; align-items:center; gap:8px; cursor:pointer;" id="recurring-toggle-label">
+                <input type="checkbox" id="exp-is-recurring" style="width:16px; height:16px;"/>
+                <span style="font-weight:600; color:#fff;">🔄 Set as a recurring expense</span>
+              </label>
+              <div id="recurring-options" class="hidden" style="margin-top: 16px;">
+                <label for="exp-frequency" style="margin-bottom:6px; display:block;">Frequency</label>
+                <div class="field-input">
+                  <svg class="fi-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon></svg>
+                  <select id="exp-frequency">
+                    <option value="Monthly">🗓️ Monthly</option>
+                    <option value="Weekly">📆 Weekly</option>
+                    <option value="Yearly">📅 Yearly</option>
+                    <option value="Daily">🔁 Daily</option>
+                  </select>
+                </div>
               </div>
             </div>
 
@@ -532,14 +604,38 @@
   </div>
 </div>
 
+<!-- ═══ PROFILE MODAL ═══ -->
+<div id="profile-modal" class="modal-bg hidden">
+  <div class="modal modal-sm">
+    <div class="modal-head">
+      <h3>My Profile</h3>
+      <button class="modal-x" id="profile-modal-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+    </div>
+    <div style="display: flex; align-items: center; gap: 16px; margin-top: 10px;">
+      <div class="sb-avatar" id="prof-avatar" style="width: 50px; height: 50px; font-size: 20px;">U</div>
+      <div>
+        <h2 id="prof-name" style="margin:0; font-size: 1.2rem; color: #fff;">Name</h2>
+        <div id="prof-username" style="color: #9ca3af; font-size: 0.9rem;">@username</div>
+      </div>
+    </div>
+    <div style="margin-top: 20px; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px;">
+      <div style="color: #9ca3af; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.5px;">Registered Email</div>
+      <div id="prof-mail" style="color: #e5e7eb; font-size: 1rem; margin-top: 4px;">loading...</div>
+    </div>
+    <div class="modal-foot" style="margin-top: 24px;">
+      <button class="ghost-btn" id="profile-close-btn" style="width: 100%;">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- TOAST -->
 <div id="toast" class="toast hidden">
   <div class="toast-icon" id="toast-icon">✓</div>
   <span id="toast-message">Done</span>
 </div>
 
-<script src="../static/js/api.js"></script>
-<script src="../static/js/app.js"></script>
+<script src="../static/js/api.js?v=5"></script>
+<script src="../static/js/app.js?v=5"></script>
 </body>
 </html>
   
